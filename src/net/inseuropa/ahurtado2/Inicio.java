@@ -1,6 +1,8 @@
 package net.inseuropa.ahurtado2;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -12,7 +14,7 @@ public class Inicio extends JFrame{
     }
     Inicio(String s){
         setTitle(s);
-        setSize(510,110);
+        setSize(510,155);
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
@@ -28,10 +30,35 @@ public class Inicio extends JFrame{
         directorio.setLocation(160,5);
         add(directorio);
 
+        JLabel labelbs=new JLabel("Tamany de les caixes:");
+        labelbs.setSize(240,25);
+        labelbs.setLocation(5,35);
+        add(labelbs);
+
+        JTextField boxsize=new JTextField("2,4,8,16,32,64");
+        boxsize.setSize(240,25);
+        boxsize.setLocation(5,60);
+        add(boxsize);
+
+        JLabel labelcl=new JLabel("Saturació de color");
+        labelcl.setSize(240,25);
+        labelcl.setLocation(250,35);
+        add(labelcl);
+
+        JTextField color=new JTextField("128");
+        color.setSize(240,25);
+        color.setLocation(250,60);
+        add(color);
+
         JButton enviar=new JButton("Envia");
         enviar.setSize(150,25);
-        enviar.setLocation(5,40);
+        enviar.setLocation(5,95);
         add(enviar);
+
+        JButton ver=new JButton("Visualitza");
+        ver.setSize(150,25);
+        ver.setLocation(160,95);
+        add(ver);
 
 
         seleccionar.addActionListener(new ActionListener() {
@@ -49,11 +76,26 @@ public class Inicio extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    Fractal f=new Fractal(new File(directorio.getText()));
+                    Fractal f=new Fractal(new File(directorio.getText()),boxsize.getText(),Integer.valueOf(color.getText()));
                     JOptionPane.showMessageDialog(null,f.dimension<=0?"Va haver un error al resoldre la imatge.":"La dimensió fractal és "+new DecimalFormat("#.#######").format(f.dimension)+".","Dimensió fractal trobada",JOptionPane.INFORMATION_MESSAGE);
                 }catch(Exception Ex){
                     Ex.printStackTrace();
                     JOptionPane.showMessageDialog(null,"Va haver un error trobant la dimensió fractal del fitxer.","ERROR",JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        ver.addActionListener(new ActionListener(){
+            @Override
+            public void actionPerformed(ActionEvent e){
+                try{
+                    File f=File.createTempFile("png","png");
+                    Fractal F=new Fractal(new File(directorio.getText()),boxsize.getText(),Integer.valueOf(color.getText()));
+                    ImageIO.write(F.bi,"png",f);
+                    Desktop.getDesktop().open(f);
+                }catch(Exception Ex){
+                    Ex.printStackTrace();
+                    JOptionPane.showMessageDialog(null,"Va haver un error al mostrar la imatge.");
                 }
             }
         });

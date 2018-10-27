@@ -30,7 +30,7 @@ the smallest number of pixels). Now it works fine for sets with D near to 2.0
 
 */
 public class FractalBoxCounter implements PlugInFilter {
-	static String sizes = "2,3,4,6,8,12,16,32,64,128,256,497,512";
+	public String sizes = "2,3,4,6,8,12,16,32,64,128,256,497,512";
 	static boolean blackBackground;
 	int[] boxSizes;
 	float[] boxCountSums;
