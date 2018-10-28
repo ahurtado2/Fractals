@@ -16,12 +16,15 @@ public class Fractal{
     public final ImagePlus imagen;
     public final HashMap<Integer,Integer> hm=new HashMap<>();
     public final List<String> lista=new ArrayList<String>();
-    public final FractalBoxCounter FBC;
+    public FractalBoxCounter FBC;
     public double dimension;
     public final BufferedImage bi;
-    public Fractal(File f,String boxsize,int color)throws Exception{
+    public Fractal(File f,int color,boolean fondoNegro)throws Exception{
         file=f;
-        imagen=new ImagePlus("Fractal",bi=escalaGrises(f,color));
+        imagen=new ImagePlus("Fractal",bi=escalaGrises(f,color,fondoNegro));
+    }
+
+    public Fractal comprobar(String boxsize){
         ImageConverter ic=new ImageConverter(imagen);
         ic.convertToGray8();
         ic.convertToRGB();
@@ -32,9 +35,10 @@ public class Fractal{
         FBC.setup("",imagen);
         FBC.run(imagen.getProcessor());
         dimension=FBC.dimension;
+        return this;
     }
 
-    public static BufferedImage escalaGrises(File f,int color)throws Exception{
+    public static BufferedImage escalaGrises(File f,int color,boolean fondoNegro)throws Exception{
         BufferedImage im=ImageIO.read(f);
         Raster r=im.getRaster();
         for(int x=0;x<im.getWidth();x++)for(int y=0;y<im.getHeight();y++){
@@ -42,7 +46,8 @@ public class Fractal{
             i[3]=0;
             int media=i[0]+i[1]+i[2];
             media/=3;
-            media=media>=color?255:0;
+            if(fondoNegro)media=media>=color?0:255;
+            else media=media>=color?255:0;
             for(int X=0;X<3;X++)i[X]=media;
             ((WritableRaster)r).setPixel(x,y,i);
         }return im;

@@ -60,6 +60,16 @@ public class Inicio extends JFrame{
         ver.setLocation(160,95);
         add(ver);
 
+        JLabel labelfondo=new JLabel("Fons negre");
+        labelfondo.setSize(100,25);
+        labelfondo.setLocation(320,95);
+        add(labelfondo);
+
+        JCheckBox fondoNegro=new JCheckBox();
+        fondoNegro.setSize(20,20);
+        fondoNegro.setLocation(385,98);
+        add(fondoNegro);
+
 
         seleccionar.addActionListener(new ActionListener() {
             @Override
@@ -76,7 +86,7 @@ public class Inicio extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    Fractal f=new Fractal(new File(directorio.getText()),boxsize.getText(),Integer.valueOf(color.getText()));
+                    Fractal f=new Fractal(new File(directorio.getText()),Integer.valueOf(color.getText()),fondoNegro.isSelected()).comprobar(boxsize.getText());
                     JOptionPane.showMessageDialog(null,f.dimension<=0?"Va haver un error al resoldre la imatge.":"La dimensió fractal és "+new DecimalFormat("#.#######").format(f.dimension)+".","Dimensió fractal trobada",JOptionPane.INFORMATION_MESSAGE);
                 }catch(Exception Ex){
                     Ex.printStackTrace();
@@ -89,8 +99,17 @@ public class Inicio extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e){
                 try{
+                    Fractal F=new Fractal(new File(directorio.getText()),Integer.valueOf(color.getText()),fondoNegro.isSelected());
+                    JFrame imagen=new JFrame();
+                    imagen.setLayout(new BorderLayout());
+                    ScrollPane sp=new ScrollPane();
+                    imagen.add(sp);
+                    sp.add(new JLabel(new ImageIcon(F.bi)));
+                    imagen.setVisible(true);
+                    imagen.setLocationRelativeTo(null);
+                    imagen.setSize(1000,1000);
+                    if(true)return;
                     File f=File.createTempFile("png","png");
-                    Fractal F=new Fractal(new File(directorio.getText()),boxsize.getText(),Integer.valueOf(color.getText()));
                     ImageIO.write(F.bi,"png",f);
                     Desktop.getDesktop().open(f);
                 }catch(Exception Ex){
