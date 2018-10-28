@@ -1,11 +1,16 @@
 package net.inseuropa.ahurtado2;
+import ij.gui.ImageLayout;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
+import java.awt.datatransfer.ClipboardOwner;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.net.URI;
 import java.text.DecimalFormat;
 
 public class Inicio extends JFrame{
@@ -13,6 +18,7 @@ public class Inicio extends JFrame{
         new Inicio("Calculadora de la dimensió fractal");
     }
     Inicio(String s){
+
         setTitle(s);
         setSize(510,155);
         setResizable(false);
@@ -86,7 +92,7 @@ public class Inicio extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 try{
-                    Fractal f=new Fractal(new File(directorio.getText()),Integer.valueOf(color.getText()),fondoNegro.isSelected()).comprobar(boxsize.getText());
+                    Fractal f=new Fractal(new File(directorio.getText()),Integer.valueOf(color.getText())).comprobar(boxsize.getText(),fondoNegro.isSelected());
                     JOptionPane.showMessageDialog(null,f.dimension<=0?"Va haver un error al resoldre la imatge.":"La dimensió fractal és "+new DecimalFormat("#.#######").format(f.dimension)+".","Dimensió fractal trobada",JOptionPane.INFORMATION_MESSAGE);
                 }catch(Exception Ex){
                     Ex.printStackTrace();
@@ -99,16 +105,7 @@ public class Inicio extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e){
                 try{
-                    Fractal F=new Fractal(new File(directorio.getText()),Integer.valueOf(color.getText()),fondoNegro.isSelected());
-                    JFrame imagen=new JFrame();
-                    imagen.setLayout(new BorderLayout());
-                    ScrollPane sp=new ScrollPane();
-                    imagen.add(sp);
-                    sp.add(new JLabel(new ImageIcon(F.bi)));
-                    imagen.setVisible(true);
-                    imagen.setLocationRelativeTo(null);
-                    imagen.setSize(1000,1000);
-                    if(true)return;
+                    Fractal F=new Fractal(new File(directorio.getText()),Integer.valueOf(color.getText()));
                     File f=File.createTempFile("png","png");
                     ImageIO.write(F.bi,"png",f);
                     Desktop.getDesktop().open(f);
